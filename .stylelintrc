@@ -1,0 +1,13 @@
+{
+  "plugins": [
+    "stylelint-order"
+  ],
+  "extends": [
+    "stylelint-config-standard",
+    "stylelint-config-recess-order"
+  ],
+  "ignoreFiles": ["node_modules"],
+  "rules": {
+    "selector-class-pattern": null
+  }
+}
