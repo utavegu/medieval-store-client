@@ -1,3 +1,10 @@
+Черновик:
+Версия ноды - 18.16.0
+Версия npm - 9.7.1
+next - 13.4.6
+typescript - 5.1.3
+Код проверяется линтерами, не соответствующий правилам кодгайда код в коммит не попадет.
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
