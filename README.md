@@ -5,6 +5,20 @@ next - 13.4.6
 typescript - 5.1.3
 Код проверяется линтерами, не соответствующий правилам кодгайда код в коммит не попадет.
 
+Настройка дев-докер-композа, отвечающая за клиентскую часть:
+client:
+    container_name: client-container
+    image: node:hydrogen-alpine3.16
+    working_dir: /medieval-store-client-app
+    volumes:
+      - ./medieval-store-client:/medieval-store-client-app
+    ports:
+      - $CLIENT_EXTERNAL_PORT:$CLIENT_INTERNAL_PORT
+    command: [ "npm", "run", "dev" ]
+    depends_on:
+      - mongo
+      - server
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
