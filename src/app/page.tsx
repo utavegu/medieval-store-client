@@ -7,74 +7,14 @@
 
 import axios, { AxiosError } from 'axios';
 import React, { FormEvent, useState } from 'react';
+import LoginForm from '@/components/LoginForm';
+import RegistrationForm from '@/components/RegistrationForm';
 
 const serverApiURL = 'http://localhost:4000/api';
 const getUsersEndpoint = `${serverApiURL}/users`;
 const loginEndpoint = `${serverApiURL}/auth/login`;
 const testProtectEndpoint = `${serverApiURL}/auth/test`;
 const resreshTokenEndpoint = `${serverApiURL}/auth/refresh`;
-
-function LoginForm() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-
-  const handleSubmit = async (event: FormEvent) => {
-    event.preventDefault();
-    try {
-      // через Фетч
-      // await fetch(loginEndpoint, {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json;charset=utf-8'
-      //   },
-      //   body: JSON.stringify({
-      //     email,
-      //     password
-      //   }),
-      //   credentials: 'include'
-      // });
-
-      // через Аксиос
-      const response = await axios.request({
-        method: 'post',
-        url: loginEndpoint,
-        data: {
-          email,
-          password,
-        },
-        withCredentials: true,
-      });
-      const accessToken = response.data.accessToken;
-      localStorage.setItem('accessToken', accessToken);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label htmlFor="email">Логин</label>
-        <input
-          type="email"
-          id="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-      </div>
-      <div>
-        <label htmlFor="password">Пароль</label>
-        <input
-          type="password"
-          id="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-      </div>
-      <button type="submit">Отправить форму</button>
-    </form>
-  );
-}
 
 const handleGetProtectEndpoint = async () => {
   // TODO: https или http в зависимости от ноденв продакшн
@@ -136,13 +76,14 @@ axios.interceptors.response.use(
 export default function Home() {
   return (
     <>
-      <LoginForm />
+      <RegistrationForm />
+      {/* <LoginForm loginEndpoint={loginEndpoint} />
       <button onClick={handleGetProtectEndpoint}>Проверить права доступа</button>
       <br />
       <br />
       test@mail.ru
       <br />
-      1dd2__345A__!f-f+s
+      1dd2__345A__!f-f+s */}
     </>
     // <main className={styles.main}>
     //   <div className={styles.description}>
