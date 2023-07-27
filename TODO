@@ -1,1 +1,11 @@
+Поиск по TODO
+
 Предупреждение о использовании куки
+
+Предупреждалку "нет эни" пока делаю ворнингом, но в препродакшене она снова должна стать еррором
+
+Похоже пора заняться решением этой проблемы, уже начинает утомлять:
+sudo chown -R utavegu /home/utavegu/Repositories/medieval-store/medieval-store-client/.next/server
+sudo chown -R utavegu /home/utavegu/Repositories/medieval-store/medieval-store-client/.next/static
+sudo chown -R utavegu /home/utavegu/Repositories/medieval-store/medieval-store-client/.next/types
+Всё что создаётся под докер композом, создаётся под рутом

@@ -1,0 +1,11 @@
+.inputBlock {
+  margin: 10px;
+}
+
+.inputError {
+  outline: 1px solid red;
+}
+
+.validationErrorText {
+  color: red;
+}
