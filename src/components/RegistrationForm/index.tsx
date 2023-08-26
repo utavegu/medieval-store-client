@@ -16,6 +16,8 @@ TODO-s:
 - ещё вот сюда посмотри: https://stackoverflow.com/questions/61839197/trying-to-use-react-hook-form-in-combination-with-react-input-mask
 */
 
+const RU_TEL_MASK = '+7 (999) 999-99-99';
+
 const clearTel = (tel: any) => tel.replace(/[^0-9]/g, '');
 
 const isNotFilledTel = (v: any = '7') => {
@@ -39,7 +41,7 @@ const CustomMaskedInput = (props: any) => {
     <MaskedInput
       name={name}
       value={value}
-      mask="+7 (999) 999-99-99"
+      mask={RU_TEL_MASK}
       maskPlaceholder={null}
       alwaysShowMask
       onChange={(e) => {

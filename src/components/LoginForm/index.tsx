@@ -36,7 +36,7 @@ const LoginForm: FC<PropTypes> = ({ loginEndpoint }): JSX.Element => {
           email,
           password,
         },
-        withCredentials: true,
+        withCredentials: true, // А тут зачем? Забыл уже. Потыкайся и вспомни. Предположу, что иначе просто не запишет в куки рефреш-токен из успешного ответа сервера.
       });
       const accessToken = response.data.accessToken;
       localStorage.setItem('accessToken', accessToken);
