@@ -9,3 +9,9 @@ sudo chown -R utavegu /home/utavegu/Repositories/medieval-store/medieval-store-c
 sudo chown -R utavegu /home/utavegu/Repositories/medieval-store/medieval-store-client/.next/static
 sudo chown -R utavegu /home/utavegu/Repositories/medieval-store/medieval-store-client/.next/types
 Всё что создаётся под докер композом, создаётся под рутом
+
+https или http в зависимости от ноденв продакшн (в апи)
+
+Также добавить сервисы товаров и пользователей (апи)
+
+Помни, что только бэки умеют общаться через имя микросервиса, а фронту нужно указывать внешний адрес и на бэке настраивать его в корс ориджин (апи)

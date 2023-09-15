@@ -5,105 +5,31 @@
 
 'use client';
 
-import axios, { AxiosError } from 'axios';
-import React, { FormEvent, useState } from 'react';
+import React from 'react';
 import LoginForm from '@/components/LoginForm';
 import RegistrationForm from '@/components/RegistrationForm';
 
-const serverApiURL = 'http://localhost:4000/api';
-const getUsersEndpoint = `${serverApiURL}/users`;
-const loginEndpoint = `${serverApiURL}/auth/login`;
-const logoutEndpoint = `${serverApiURL}/auth/logout`;
-const testProtectEndpoint = `${serverApiURL}/auth/test`;
-const resreshTokenEndpoint = `${serverApiURL}/auth/refresh`;
-
-// TODO: я бы из соображений секурности ещё автокомплит убрал, пожалуй
-
-const handleGetProtectEndpoint = async () => {
-  // TODO: Тут ещё есть такой момент, что если ацесс токен протух, то первым запросом он не пустит, но обновит ацесс токен. А вторым уже будет нормальный открытый доступ. Нужно вот как-то сделать чтобы для юзера это без подрыва происходило и он не замечал этих подкапотных дел и сразу просто получал доступ к ручке, если рефреш-токен ещё актуален. Тут, скорее всего в интерсепторе нужно будет что-то пошаманить.
-  // TODO: https или http в зависимости от ноденв продакшн
-  // Потому что только бэки умеют общаться через имя микросервиса, а фронту нужно указывать внешний адрес и на бэке настраивать его в корс ориджин
-  try {
-    const response = await axios.request({
-      method: 'get',
-      url: testProtectEndpoint,
-      headers: { Authorization: `Bearer ${localStorage.getItem('accessToken')}` },
-    });
-  } catch (error) {
-    console.error((error as AxiosError).message);
+/*
+То что тут, позже будет в хэдере. Ну и обязательно ещё состояние активированности аккаунта проверяй и если нет, в ЛК ничего не подсовывай кроме настойчивой просьбы подтвердить аккаунт.
+useEffect(() => {
+  if (localStorage.getItem('accessToken')) {
+    store.checkAuth()
   }
-};
+}, [])
+*/
 
-const handleLogout = async () => {
-  try {
-    const response = await axios.request({
-      method: 'get',
-      url: logoutEndpoint,
-      headers: { Authorization: `Bearer ${localStorage.getItem('accessToken')}` },
-      withCredentials: true, // без него не даст серверу затереть рефреш-токен
-    });
-    if (response?.statusText === 'OK') {
-      localStorage.removeItem('accessToken');
-    }
-  } catch (error) {
-    console.error((error as AxiosError).message);
-  }
-};
-
-axios.interceptors.response.use(
-  (response) => {
-    // Любой код состояния, находящийся в диапазоне 2xx, вызывает срабатывание этой функции
-    // Здесь можете сделать что-нибудь с ответом
-    return response;
-  },
-  (error) => {
-    // Любые коды состояния, выходящие за пределы диапазона 2xx, вызывают срабатывание этой функции
-    // Здесь можете сделать что-то с ошибкой ответа
-    // console.log('intercept error');
-    // console.log((error as AxiosError).message); // Request failed with status code 401
-
-    const errorMessage = error?.response?.data?.data?.errorMessage?.message; // TODO: Ну ппц... покороче до него точно никак не добраться? Ох уж эти обёртки аксиоса
-
-    if (errorMessage === 'TokenExpiredError') {
-      (async () => {
-        try {
-          const response = await axios.request({
-            method: 'get',
-            url: resreshTokenEndpoint,
-            withCredentials: true,
-          });
-
-          if (!response) {
-            return;
-          }
-
-          const accessToken = response?.data?.accessToken;
-
-          if (accessToken) {
-            localStorage.setItem('accessToken', accessToken);
-          }
-
-          // и вот где-то тут нужно повторить проваленный запрос, который привёл к перехвату этой ошибки интерцептором
-        } catch (error) {
-          console.error('Tokens update request error');
-          return error;
-        }
-      })();
-    }
-    // return Promise.reject(error);
-  }
-);
+// TODO: я бы из соображений секурности ещё автокомплит убрал, пожалуй (в формах)
 
 export default function Home() {
   return (
     <>
-      {/* <h2>Форма регистрации</h2>
+      <h2>Форма регистрации</h2>
       <RegistrationForm />
-      <br /><hr /><br /> */}
+      <br />
+      <hr />
+      <br />
       <h2>Форма входа</h2>
-      <LoginForm loginEndpoint={loginEndpoint} />
-      <button onClick={handleGetProtectEndpoint}>Проверить права доступа</button>
-      <button onClick={handleLogout}>LOGOUT</button>
+      <LoginForm />
       <br />
       <br />
       <p>Тестовый логин:</p>
