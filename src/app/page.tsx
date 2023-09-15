@@ -5,85 +5,39 @@
 
 'use client';
 
-import axios, { AxiosError } from 'axios';
-import React, { FormEvent, useState } from 'react';
+import React from 'react';
 import LoginForm from '@/components/LoginForm';
 import RegistrationForm from '@/components/RegistrationForm';
 
-const serverApiURL = 'http://localhost:4000/api';
-const getUsersEndpoint = `${serverApiURL}/users`;
-const loginEndpoint = `${serverApiURL}/auth/login`;
-const testProtectEndpoint = `${serverApiURL}/auth/test`;
-const resreshTokenEndpoint = `${serverApiURL}/auth/refresh`;
-
-const handleGetProtectEndpoint = async () => {
-  // TODO: https или http в зависимости от ноденв продакшн
-  // Потому что только бэки умеют общаться через имя микросервиса, а фронту нужно указывать внешний адрес и на бэке настраивать его в корс ориджин
-  try {
-    const response = await axios.request({
-      method: 'get',
-      url: testProtectEndpoint,
-      headers: { Authorization: `Bearer ${localStorage.getItem('accessToken')}` },
-    });
-    console.log(response); // тут может быть андефайн, если токен протух
-  } catch (error) {
-    console.error((error as AxiosError).message);
+/*
+То что тут, позже будет в хэдере. Ну и обязательно ещё состояние активированности аккаунта проверяй и если нет, в ЛК ничего не подсовывай кроме настойчивой просьбы подтвердить аккаунт.
+useEffect(() => {
+  if (localStorage.getItem('accessToken')) {
+    store.checkAuth()
   }
-};
+}, [])
+*/
 
-axios.interceptors.response.use(
-  (response) => {
-    // Любой код состояния, находящийся в диапазоне 2xx, вызывает срабатывание этой функции
-    // Здесь можете сделать что-нибудь с ответом
-    return response;
-  },
-  (error) => {
-    // TODO: ПОНЯТЬ, КАК ЗАСТАВИТЬ ПЕРЕХВАТЧИК НЕ УХОДИТЬ В БЕСКОНЕЧНЫЙ ЦИКЛ (это произойдёт если в куках не будет рефреш токена, либо он будет невалиден)
-    // Любые коды состояния, выходящие за пределы диапазона 2xx, вызывают срабатывание этой функции
-    // Здесь можете сделать что-то с ошибкой ответа
-    // console.log('intercept error');
-    // console.log((error as AxiosError).message); // Request failed with status code 401
-    const isUnautorizedError: boolean = (error as AxiosError).message.includes('401');
-    // console.log(isUnautorizedError); // true
-    if (isUnautorizedError) {
-      (async () => {
-        try {
-          // console.log('Запрашиваю у сервера новый рефреш токен');
-          const response = await axios.request({
-            method: 'get',
-            url: resreshTokenEndpoint,
-            withCredentials: true,
-          });
-          console.log('response');
-          console.log(!response);
-          if (!response) {
-            return;
-          }
-          const accessToken = response?.data?.accessToken;
-          if (accessToken) {
-            localStorage.setItem('accessToken', accessToken);
-          }
-        } catch (error) {
-          console.log('Ошибка запроса на рефреш!'); // до сюда уже не доходит
-          return error;
-        }
-      })();
-    }
-    // return Promise.reject(error);
-  }
-);
+// TODO: я бы из соображений секурности ещё автокомплит убрал, пожалуй (в формах)
 
 export default function Home() {
   return (
     <>
+      <h2>Форма регистрации</h2>
       <RegistrationForm />
-      {/* <LoginForm loginEndpoint={loginEndpoint} />
-      <button onClick={handleGetProtectEndpoint}>Проверить права доступа</button>
+      <br />
+      <hr />
+      <br />
+      <h2>Форма входа</h2>
+      <LoginForm />
       <br />
       <br />
+      <p>Тестовый логин:</p>
       test@mail.ru
       <br />
-      1dd2__345A__!f-f+s */}
+      <br />
+      <p>Тестовый пароль:</p>
+      1dd2__345A__!f-f+s
     </>
     // <main className={styles.main}>
     //   <div className={styles.description}>
