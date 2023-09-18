@@ -33,11 +33,11 @@ export default function Home() {
       <br />
       <br />
       <p>Тестовый логин:</p>
-      test@mail.ru
+      client@mail.ru
       <br />
       <br />
       <p>Тестовый пароль:</p>
-      1dd2__345A__!f-f+s
+      CLIENT__!123slojno
     </>
     // <main className={styles.main}>
     //   <div className={styles.description}>

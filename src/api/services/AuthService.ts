@@ -1,8 +1,6 @@
 import { AxiosResponse } from 'axios';
-import $api from '../api';
-import { AuthResponse } from '../models/response/AuthResponse';
-
-// TODO: Мэйби тебе в апи место?
+import $api from '..';
+import { AuthResponse } from '../../models/response/AuthResponse';
 
 export default class AuthService {
   static async registration(email: string, password: string): Promise<AxiosResponse<AuthResponse>> {

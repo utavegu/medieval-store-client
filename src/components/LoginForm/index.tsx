@@ -4,6 +4,7 @@ import { FC, FormEvent, useContext, useState } from 'react';
 import styles from './LoginForm.module.css';
 import { IUser } from '@/models/IUser';
 import { Context } from '@/store/context';
+import { observer } from 'mobx-react-lite';
 
 // TODO: тут ещё добавить функциональность "забыли пароль?". И обеим формам "показать пароль" (чтобы символы не были звёздочками)
 
@@ -19,6 +20,7 @@ const LoginForm = (): JSX.Element => {
 
   return (
     <>
+      {store.user.firstName ? store.user.firstName : 'Залогиньтесь!'}
       <form
         onSubmit={handleSubmit}
         className={styles.loginForm}
@@ -62,4 +64,4 @@ const LoginForm = (): JSX.Element => {
   );
 };
 
-export default LoginForm;
+export default observer(LoginForm);
