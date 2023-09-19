@@ -1,8 +1,10 @@
 import { makeAutoObservable } from 'mobx';
-import AuthService from '../services/AuthService';
+import AuthService from '../api/services/AuthService';
+import UserService from '../api/services/UserService';
+import { parseJwt } from '@/utils/parseJwt';
 import { IUser } from '../models/IUser';
-import axios from 'axios';
-import { AuthResponse } from '@/models/response/AuthResponse';
+// import axios from 'axios';
+// import { AuthResponse } from '@/models/response/AuthResponse';
 
 // TODO: AuthSlice/AuthReducer и стор - общий индекс, куда все слайсы импортируются
 
@@ -30,10 +32,13 @@ export default class Store {
 
   async login(email: string, password: string) {
     try {
-      const response = await AuthService.login(email, password);
-      localStorage.setItem('accessToken', response.data.accessToken);
+      const authResponse = await AuthService.login(email, password);
+      const accessToken = authResponse.data.accessToken; // TODO: Так-то можно паттерн адаптер заюзать... а ещё у аксиоса свой какой-то есть вроде
+      localStorage.setItem('accessToken', accessToken);
+      const parsedToken = parseJwt(accessToken);
       this.setIsAuth(true);
-      this.setUser(response.data.user); // TODO: А, ну правильно, тут ведь никакой юзер не прилетает. Надо его дёрнуть руками тут и только тогда упихать. Для этого, полагаю, расшифровать JWT-токен и по айдишнику дёрнуть. Ну и на бэке должна быть это защищенная ручка... и тут юзер-сервис... в общем пока прилично делов. Сервер к таком ещё не готов - не хватает нужных гард и прав
+      const userResponse = await UserService.fetchUser(parsedToken.sub); // слишком много полей, кстати, отдаю. Часть из них нельзя отдавать на клиент
+      this.setUser(userResponse.data);
     } catch (error: any) {
       console.error(error.response?.data?.message);
     }
@@ -41,10 +46,13 @@ export default class Store {
 
   async registration(email: string, password: string) {
     try {
-      const response = await AuthService.registration(email, password);
-      localStorage.setItem('accessToken', response.data.accessToken);
+      const authResponse = await AuthService.login(email, password);
+      const accessToken = authResponse.data.accessToken; // TODO: Так-то можно паттерн адаптер заюзать... а ещё у аксиоса свой какой-то есть вроде
+      localStorage.setItem('accessToken', accessToken);
+      const parsedToken = parseJwt(accessToken);
       this.setIsAuth(true);
-      this.setUser(response.data.user); // Аналогично
+      const userResponse = await UserService.fetchUser(parsedToken.sub); // слишком много полей, кстати, отдаю. Часть из них нельзя отдавать на клиент
+      this.setUser(userResponse.data);
     } catch (error: any) {
       console.error(error.response?.data?.message);
     }
@@ -63,6 +71,8 @@ export default class Store {
     }
   }
 
+  /*
+  У меня вроде нет необходимости в этом методе, но вот с лоадингом надо взять приём
   async checkIsAuth() {
     this.setLoading(true);
     try {
@@ -82,6 +92,7 @@ export default class Store {
       this.setLoading(false);
     }
   }
+  */
 
   // TODO: для проверки прав доступа, потом удалить
   async test() {

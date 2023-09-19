@@ -1,0 +1,137 @@
+/* @import '/src/styles/variables.scss';
+@import '/src/styles/mixins.scss'; */
+
+.header {
+  /* background-color: $white-color;
+  border-bottom: 1px solid $blocks-background-color; */
+  background-color: gray;
+}
+
+.fullscreenMenu {
+  height: 100vh;
+}
+
+.header > div {
+  /* @include flex; */
+  flex-direction: column;
+  padding-top: 12px;
+  padding-bottom: 5px;
+}
+
+.menuHeading {
+  /* @include flex; */
+  justify-content: space-between;
+  align-items: center;
+}
+
+.menuHeadingPhone {
+  /* font: $button-text;
+  color: $text-color; */
+}
+
+.toggleMenuButton {
+  width: 18px;
+  height: 14px;
+  margin-top: -6px;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.close {
+  background-image: url(/img/icons/cross.svg);
+}
+
+.open {
+  background-image: url(/img/icons/hamburger.svg);
+}
+
+.visible {
+  display: block;
+}
+
+.hidden {
+  display: none;
+}
+
+.interactiveContainer {
+  /* @include flex; */
+  flex-direction: column;
+  align-items: center;
+}
+
+.phoneInMenu {
+  /* font: $header-phone-mobile;
+  color: $text-color; */
+  margin-bottom: 15px;
+
+  /* &:hover {
+    color: $red-color;
+  } */
+}
+
+.clickMeButton {
+  margin-top: 17px;
+}
+
+.chooseFlatButton {
+  display: none;
+}
+
+/* @media (min-width: $desktop-width) { */
+@media (min-width: 1440px) {
+  .header > div {
+    padding-top: 14px;
+    padding-bottom: 15px;
+    flex-direction: row;
+  }
+
+  .menuHeadingPhone {
+    display: none;
+  }
+
+  .toggleMenuButton {
+    display: none;
+  }
+
+  .menu {
+    display: flex;
+    flex-grow: 1;
+    justify-content: space-around;
+  }
+
+  .interactiveContainer {
+    /* @include flex; */
+    flex-direction: row-reverse;
+    align-items: center;
+    margin-left: auto;
+  }
+
+  .phoneInMenu {
+    position: relative;
+    /* font: $button-text; */
+    margin-bottom: 0;
+    margin-left: 30px;
+    padding-right: 28px;
+
+    /* &::after {
+      @include pseudo-element;
+      width: 20px;
+      height: 20px;
+      right: 0;
+      top: -3px;
+      background-image: url(/img/icons/phone.svg);
+    } */
+  }
+
+  .chooseFlatButton {
+    display: block;
+    margin-left: 16px;
+  }
+
+  .clickMeButton {
+    margin: 0;
+  }
+}

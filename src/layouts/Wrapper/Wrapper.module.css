@@ -1,0 +1,13 @@
+/* @import '/src/styles/variables.scss'; */
+
+.wrapper {
+  margin: 0 auto;
+  padding: 0 16px;
+  max-width: 1440px;
+
+  border: 3px solid green;
+
+  @media (min-width: 1440px) {
+    padding: 0 95px;
+  }
+}
