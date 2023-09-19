@@ -8,6 +8,7 @@
 import React from 'react';
 import LoginForm from '@/components/LoginForm';
 import RegistrationForm from '@/components/RegistrationForm';
+import Wrapper from '@/layouts/Wrapper/Wrapper';
 
 /*
 То что тут, позже будет в хэдере. Ну и обязательно ещё состояние активированности аккаунта проверяй и если нет, в ЛК ничего не подсовывай кроме настойчивой просьбы подтвердить аккаунт.
@@ -22,7 +23,7 @@ useEffect(() => {
 
 export default function Home() {
   return (
-    <>
+    <Wrapper>
       <h2>Форма регистрации</h2>
       <RegistrationForm />
       <br />
@@ -38,7 +39,7 @@ export default function Home() {
       <br />
       <p>Тестовый пароль:</p>
       CLIENT__!123slojno
-    </>
+    </Wrapper>
     // <main className={styles.main}>
     //   <div className={styles.description}>
     //     <p>
