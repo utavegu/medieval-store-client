@@ -1,19 +1,22 @@
-'use client';
+'use client'; // вероятно временно
 
-import React, { FC, useState, useContext } from 'react';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import React, { FC, useState } from 'react';
+import { observer } from 'mobx-react-lite';
+import classnames from 'classnames';
+import { authSlice } from '@/store/auth.slice';
 // import { useRouter } from 'next/router';
 // import Link from 'next/link';
 // import Image from 'next/image';
-import classnames from 'classnames';
 // import { spaceSweeper } from '../../utils/spaceSweeper';
 import Wrapper from '../Wrapper/Wrapper';
 // import Navigation from '../../components/Navigation/Navigation';
 // import Button from '../../components/Button/Button';
 // import { ButtonVariant } from '../../typing/enums/buttons.enum';
 // import { IContacts } from '../../typing/interfaces/ICommon';
+import Navigation from '@/components/Navigation';
+import UserMenu from '@/components/UserMenu';
 import styles from './Header.module.css';
-import { observer } from 'mobx-react-lite';
-import { Context } from '@/store/context';
 
 type PropTypes = {
   contacts: any; // IContacts;
@@ -22,7 +25,6 @@ type PropTypes = {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const Header: FC<PropTypes> = ({ contacts }): JSX.Element => {
   // const router = useRouter();
-  const { store } = useContext(Context);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   /*
@@ -45,36 +47,8 @@ const Header: FC<PropTypes> = ({ contacts }): JSX.Element => {
     <header className={classnames(styles.header, isMenuOpen && styles.fullscreenMenu)}>
       <Wrapper>
         <div className={styles.menuHeading}>
-          {/* TODO: Пока такая проверка, но лучше держать состояние в сторе для этого специальное */}
-          {store.user?.email ? (
-            <div>
-              <b>Здравствуйте, {store.user.firstName}!</b>
-              <br />
-              {/* Переход на страницу профиля */}
-              <a>Войти в личный кабинет</a>
-              <br />
-              <button
-                type="button"
-                onClick={() => store.logout()}
-              >
-                Разлогиниться
-              </button>
-              {/* <button
-            type="button"
-            onClick={() => store.test()}
-          >
-            Проверить права доступа
-          </button> */}
-            </div>
-          ) : (
-            <div>
-              {/* Вызов формы регистрации */}
-              <a>Регистрация</a>
-              <br />
-              {/* Вызов формы входа */}
-              <a>Вход</a>
-            </div>
-          )}
+          <Navigation />
+          <UserMenu user={authSlice.user} />
           {/* {router.pathname === '/' ? (
             <div>
               <Image src="/img/icons/company-logo.svg" alt="Логотип компании" width="34" height="36" />

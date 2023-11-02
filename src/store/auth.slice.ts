@@ -6,12 +6,15 @@ import { IUser } from '../models/IUser';
 // import axios from 'axios';
 // import { AuthResponse } from '@/models/response/AuthResponse';
 
-// TODO: AuthSlice/AuthReducer и стор - общий индекс, куда все слайсы импортируются
+type AuthUserType = IUser | null;
 
-export default class Store {
-  user = {} as IUser;
+class AuthSlice {
+  user = null as AuthUserType;
   isAuth = false; // Ещё бы на протухание токена этот момент предусмотреть автоматически... интерцептор мэйби
   isLoading = false;
+  // Если иду таким путем, тогда и объект ошибки - Error | null
+
+  // Вот в этом месте засада была. Инициировать нужно именно тут, а не в конструкторе, чтобы this не терялся
 
   constructor() {
     makeAutoObservable(this);
@@ -32,6 +35,7 @@ export default class Store {
 
   async login(email: string, password: string) {
     try {
+      console.log(this);
       const authResponse = await AuthService.login(email, password);
       const accessToken = authResponse.data.accessToken; // TODO: Так-то можно паттерн адаптер заюзать... а ещё у аксиоса свой какой-то есть вроде
       localStorage.setItem('accessToken', accessToken);
@@ -40,7 +44,8 @@ export default class Store {
       const userResponse = await UserService.fetchUser(parsedToken.sub); // слишком много полей, кстати, отдаю. Часть из них нельзя отдавать на клиент
       this.setUser(userResponse.data);
     } catch (error: any) {
-      console.error(error.response?.data?.message);
+      console.error(error);
+      // console.error(error.response?.data?.message); undefined? скорее всего из-за того, что на эту ручку на бэке гарду повесил - "только для гостей"
     }
   }
 
@@ -111,3 +116,6 @@ export default class Store {
 }
 
 // console.error((error as AxiosError).message)
+
+const authSlice = new AuthSlice();
+export { authSlice };
