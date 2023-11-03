@@ -20,6 +20,11 @@ export interface ICustomSelect {
   placeholder?: string;
 
   /**
+   * Словарь для перевода значений
+   */
+  dictionary?: { [key: string]: string };
+
+  /**
    * Цвет текста-подсказки
    */
   placeholderColor?: string;

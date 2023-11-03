@@ -12,6 +12,7 @@ const CustomSelect: FC<ICustomSelect> = ({
   setCurrentOption,
   classes,
   placeholder,
+  dictionary,
   placeholderColor = '#777',
   required = false,
   isAttemptFormSubmit = false,
@@ -89,7 +90,7 @@ const CustomSelect: FC<ICustomSelect> = ({
         onMouseLeave={() => setHover(false)}
       >
         {currentOption ? (
-          <span>{currentOption}</span>
+          <span>{dictionary ? dictionary[currentOption] : currentOption}</span>
         ) : (
           <span style={{ color: `${placeholderColor}` }}>{placeholder}</span>
         )}
@@ -110,8 +111,7 @@ const CustomSelect: FC<ICustomSelect> = ({
                 onClick={() => handleChooseVariant(option)}
                 style={{ outlineColor: focusColor }}
               >
-                {/* TODO: сюда словарь, но лучше передавать пропсом нужный словарь  */}
-                {option}
+                {dictionary ? dictionary[option] : option}
               </button>
             </li>
           ))}
