@@ -3,6 +3,7 @@ import { IProduct } from '@/models/IProduct';
 
 export default class ProductsService {
   // TODO: Пока эни, так как и на бэке ещё с параметрами не всё решил и логику не закончил
+  // TODO: А ещё тут паттерн адаптер напрашивается. И почитай реализацию аксиосовского.
   static async fetchProducts(params?: any): Promise<IProduct[]> {
     const productWithWrapper = await $api.request({
       method: 'get',
