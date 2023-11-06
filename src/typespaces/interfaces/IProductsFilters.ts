@@ -3,4 +3,5 @@ export interface IProductsFilters {
   minPrice: string | null | number;
   maxPrice: string | null | number;
   // searchQuery: string;
+  materials: { [key: string]: boolean };
 }
