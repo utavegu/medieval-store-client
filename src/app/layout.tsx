@@ -1,4 +1,4 @@
-import MobxProvider from '@/store/context';
+// import MobxProvider from '@/store/context';
 // import './globals.css';
 import '../styles/index.css';
 import MainLayout from '@/layouts/MainLayout/MainLayout';
@@ -18,9 +18,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       {/* <body className={inter.className}> */}
       <body>
-        <MobxProvider>
-          <MainLayout>{children}</MainLayout>
-        </MobxProvider>
+        {/* <MobxProvider> */}
+        <MainLayout>{children}</MainLayout>
+        {/* </MobxProvider> */}
       </body>
     </html>
   );
