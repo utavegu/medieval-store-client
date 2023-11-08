@@ -1,10 +1,10 @@
 'use client'; // вероятно временно
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import classnames from 'classnames';
-import { authSlice } from '@/store/auth.slice';
+// import { authSlice } from '@/store/auth.slice';
 // import { useRouter } from 'next/router';
 // import Link from 'next/link';
 // import Image from 'next/image';
@@ -15,7 +15,7 @@ import Wrapper from '../Wrapper/Wrapper';
 // import { ButtonVariant } from '../../typing/enums/buttons.enum';
 // import { IContacts } from '../../typing/interfaces/ICommon';
 import Navigation from '@/components/Navigation';
-import UserMenu from '@/components/UserMenu';
+// import UserMenu from '@/components/UserMenu';
 import styles from './Header.module.css';
 
 type PropTypes = {
@@ -27,11 +27,10 @@ const Header: FC<PropTypes> = ({ contacts }): JSX.Element => {
   // const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  /*
-  useEffect(() => {
-    // Тут мне видится так, что нужно заглядывать в локалсторадж, проверять наличие ацесс токена, если он есть парсить его и сравнивать его экспр с текущей датой-временем. Если текущая больше или равна - вызывать метод разлогина. И всё это не тут, а скорее в сторе, а тут только сам метод дёргать.  Либо просто делать "фетч юзер", а бэк уже там сам разрулит. Подумай ещё на свежую голову, но точно знаю что надо сделать подобный механизм от протухания токена ещё и запускать его 1 раз при заходе на сайт. Дергать юзера, пожалуй, будет более отказоустойчиво, так как на бэке все эти механизмы с токенами уже хорошо отлажены. Но можно в качестве дополнительной проверки и таймстэмпы сравнить, всё равно токен парсить будешь. Кстати, обрати внимание, что сейчас обновление страницы разлогинивает - вот это тоже поправь.
-  }, [])
-  */
+  // useEffect(() => {
+  //   authSlice.checkAuth(); // TODO: На подумать. Тут - 2 чекаута и 2 рефреша. А без юз-эффекта целых 4 раза сбегал... мне пока вообще не нравится количество перерисовок. И 6 рефрешей... Да уж... Не пускаешь, сервер - держи DDOS-атаку. Может лучше в общий лэйаут? Хотя там юзэффектом можно оптимизацию Некста поломать.
+  //   // Скорее всего просто делать "чек аус" при отрисовке компонента. Однако имей в виду, что он не перерисовывается при навигации, но перерисовывается при логине/логауте.
+  // }, []);
 
   // useEffect(() => {
   //   if (typeof window !== 'undefined') {
@@ -48,7 +47,7 @@ const Header: FC<PropTypes> = ({ contacts }): JSX.Element => {
       <Wrapper>
         <div className={styles.menuHeading}>
           <Navigation />
-          <UserMenu user={authSlice.user} />
+          {/* <UserMenu user={authSlice.user} /> */}
           {/* {router.pathname === '/' ? (
             <div>
               <Image src="/img/icons/company-logo.svg" alt="Логотип компании" width="34" height="36" />

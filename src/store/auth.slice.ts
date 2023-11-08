@@ -1,30 +1,29 @@
 import { makeAutoObservable } from 'mobx';
+import { makePersistable } from 'mobx-persist-store';
 import AuthService from '../api/services/AuthService';
 import UserService from '../api/services/UserService';
 import { parseJwt } from '@/utils/parseJwt';
 import { IUser } from '../models/IUser';
-// import axios from 'axios';
-// import { AuthResponse } from '@/models/response/AuthResponse';
 
 type AuthUserType = IUser | null;
 
 class AuthSlice {
   user = null as AuthUserType;
-  isAuth = false; // Ещё бы на протухание токена этот момент предусмотреть автоматически... интерцептор мэйби
   isLoading = false;
-  // Если иду таким путем, тогда и объект ошибки - Error | null
+  error = null as Error | null;
 
-  // Вот в этом месте засада была. Инициировать нужно именно тут, а не в конструкторе, чтобы this не терялся
+  // Вот в этом месте засада была. Инициировать нужно именно тут, а не в конструкторе, чтобы this не терялся. Не забывай про это (критично при работе с асинхронщиной)
 
   constructor() {
     makeAutoObservable(this);
+    makePersistable(this, {
+      name: 'AuthPersistStore',
+      properties: ['user'],
+      storage: typeof window !== 'undefined' ? window.localStorage : undefined,
+    });
   }
 
-  setIsAuth(bool: boolean) {
-    this.isAuth = bool;
-  }
-
-  setUser(user: IUser) {
+  setUser(user: IUser | null) {
     this.user = user;
   }
 
@@ -33,89 +32,83 @@ class AuthSlice {
     // TODO: Используешь это состояние где надо, и можно делать не тернарник, а возвращение компонента через ретурн
   }
 
+  setError(error: Error | null) {
+    this.error = error;
+  }
+
   async login(email: string, password: string) {
     try {
-      console.log(this);
+      this.setLoading(true);
+      this.setError(null);
       const authResponse = await AuthService.login(email, password);
       const accessToken = authResponse.data.accessToken; // TODO: Так-то можно паттерн адаптер заюзать... а ещё у аксиоса свой какой-то есть вроде
       localStorage.setItem('accessToken', accessToken);
       const parsedToken = parseJwt(accessToken);
-      this.setIsAuth(true);
-      const userResponse = await UserService.fetchUser(parsedToken.sub); // слишком много полей, кстати, отдаю. Часть из них нельзя отдавать на клиент
+      const userResponse = await UserService.fetchUser(parsedToken.sub); // TODO: слишком много полей, кстати, отдаю. Часть из них нельзя отдавать на клиент. Ссылку для активации точно не надо и рефреш токен, скорее всего тоже, он должен на бэке из кук подхватываться. Проверь уже.
       this.setUser(userResponse.data);
     } catch (error: any) {
       console.error(error);
+      this.setError(error as Error);
       // console.error(error.response?.data?.message); undefined? скорее всего из-за того, что на эту ручку на бэке гарду повесил - "только для гостей"
+    } finally {
+      this.setLoading(false);
     }
   }
 
   async registration(email: string, password: string) {
     try {
-      const authResponse = await AuthService.login(email, password);
-      const accessToken = authResponse.data.accessToken; // TODO: Так-то можно паттерн адаптер заюзать... а ещё у аксиоса свой какой-то есть вроде
+      this.setLoading(true);
+      this.setError(null);
+      // TODO: DRY! Но скорее всего надо поменять логику и предлагать активировать эккаунт, а не вот так.
+      const authResponse = await AuthService.login(email, password); // почему, кстати, вообще в логин долблюсь? Да, тут определенно что-то не так.
+      const accessToken = authResponse.data.accessToken; // TODO: Так-то можно паттерн адаптер заюзать... а ещё у аксиоса свой какой-то есть вроде. Разберись.
       localStorage.setItem('accessToken', accessToken);
       const parsedToken = parseJwt(accessToken);
-      this.setIsAuth(true);
-      const userResponse = await UserService.fetchUser(parsedToken.sub); // слишком много полей, кстати, отдаю. Часть из них нельзя отдавать на клиент
+      const userResponse = await UserService.fetchUser(parsedToken.sub); // слишком много полей, кстати, отдаю. Часть из них нельзя отдавать на клиент (детали выше)
       this.setUser(userResponse.data);
     } catch (error: any) {
       console.error(error.response?.data?.message);
+      this.setError(error as Error);
+    } finally {
+      this.setLoading(false);
     }
   }
 
   async logout() {
     try {
+      this.setLoading(true);
+      this.setError(null);
       const response = await AuthService.logout();
       if (response?.statusText === 'OK') {
         localStorage.removeItem('accessToken');
-        this.setIsAuth(false);
-        this.setUser({} as IUser);
+        this.setUser(null);
       }
     } catch (error: any) {
       console.error(error.response?.data?.message);
-    }
-  }
-
-  /*
-  У меня вроде нет необходимости в этом методе, но вот с лоадингом надо взять приём. Не, вот как раз его и будешь вызывать при первой загрузке сайта каждый раз (хэдера). Только сделай всё как тебе надо и убедись, что хэдер отрисовывается действительно только 1 раз и навигация на его перерисовку не влияет. Иначе в апп (или где там в новом нексте всё это делается).
-  На данный момент мне логика видится так:
-  1) Проверяется в локалсторадже ацесс токен и если есть, то
-  2) Парсится
-  3) Сравнивается дата протухания и текущая
-  4) Если всё ок - юзер из пэйлода запрашивается и записывается в стейт (в локалсторадже его хранить не хочу)
-  5) А если что-то из этого не ок, значит из аус фолс. И именно на это состояние смотришь при отрисовке вариантов меню пользователя в хэдере
-  async checkIsAuth() {
-    this.setLoading(true);
-    try {
-      // По хорошему лучше отдельный инстанс тогда, думаю. Или вообще иную реализацию...
-      const response = await axios.get<AuthResponse>('http://localhost:4000/api/auth/refresh', {
-        withCredentials: true,
-      });
-
-      localStorage.setItem('accessToken', response.data.accessToken);
-      this.setIsAuth(true);
-      this.setUser(response.data.user); // Аналогично
-      // и снова не предусматривается вариант, что токен протух... однако может он при таком кейсе автоматически удаляется, что-то я запамятовал... надо потестить
-      // и помни про оборачивание компонента в observer! из mobx-react-lite
-    } catch (error: any) {
-      console.error(error.response?.data?.message);
+      this.setError(error as Error);
     } finally {
       this.setLoading(false);
     }
   }
-  */
 
-  // TODO: для проверки прав доступа, потом удалить
-  async test() {
+  async checkAuth() {
     try {
-      await AuthService.test();
+      this.setLoading(true);
+      this.setError(null);
+      await AuthService.checkAuth();
     } catch (error: any) {
       console.error(error.response?.data?.message);
+      this.setError(error as Error);
+    } finally {
+      this.setLoading(false);
     }
   }
-}
 
-// console.error((error as AxiosError).message)
+  async removeClientSession() {
+    localStorage.removeItem('accessToken');
+    this.setUser(null);
+  }
+}
 
 const authSlice = new AuthSlice();
 export { authSlice };

@@ -19,3 +19,67 @@ https или http в зависимости от ноденв продакшн (
 А вообще может Sass тут и будет, но пока без него. Хотя нет, не стоит, во втором большом проекте он по итогу больше проблем создал
 
 Есть ошибка билда при использовании AuthSlice. Пока закомменчу его в компонентах/страницах
+
+Помни, что не только юзер должен быть для доступа, но и эккаунт у него должен быть активирован!
+Кстати, на бэке запилить не только чистилку токенов протухших, но и эккаунтов, которые небыли активированы в течение месяца. Можно пока по кнопке, без таймеров.
+"Ну и обязательно ещё состояние активированности аккаунта проверяй и если нет, в ЛК ничего не подсовывай кроме настойчивой просьбы подтвердить аккаунт."
+
+По auth почти всё (нифига...), не считая описанных там тудусов. Теперь ещё вот что: ЛК - защищённый роут. И при попытке попасть туда любым способом (допустим, лучше прикрепить на отрисовку компонента) делать чекАус.
+
+С UserMenu пока прямо печаль - и ошибки гидрации валит, и сбилдиться не даёт. Прежде чем снова вернешься к этой проблеме, почитай вот это:
+1) https://nextjs.org/docs/messages/deopted-into-client-rendering
+2) https://nextjs.org/docs/messages/react-hydration-error
+3) https://nextjs.org/docs/messages/prerender-error
+4) https://stackoverflow.com/questions/74883783/how-to-persist-mobx-data-on-nextjs
+
+А вот это на странице каталога:
+Warning: A component is changing a controlled input to be uncontrolled. This is likely caused by the value changing from a defined to undefined, which should not happen. Decide between using a controlled or uncontrolled input element for the lifetime of the component. More info: https://reactjs.org/link/controlled-components
+input
+form
+recursivelyTraverseMutationEffects@webpack-internal:///(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom.development.js:22230:35
+div
+fn@http://localhost:3000/_next/static/chunks/webpack.js?v=1699435563957:371:21
+Catalog
+fn@http://localhost:3000/_next/static/chunks/webpack.js?v=1699435563957:371:21
+(app-pages-browser)/./node_modules/next/dist/compiled/scheduler/cjs/scheduler.development.js@http://localhost:3000/_next/static/chunks/main-app.js?v=1699435563957:1686:1
+fn@http://localhost:3000/_next/static/chunks/webpack.js?v=1699435563957:371:21
+fn@http://localhost:3000/_next/static/chunks/webpack.js?v=1699435563957:371:21
+fn@http://localhost:3000/_next/static/chunks/webpack.js?v=1699435563957:371:21
+fn@http://localhost:3000/_next/static/chunks/webpack.js?v=1699435563957:371:21
+(app-pages-browser)/./node_modules/next/dist/compiled/scheduler/cjs/scheduler.development.js@http://localhost:3000/_next/static/chunks/main-app.js?v=1699435563957:1686:1
+fn@http://localhost:3000/_next/static/chunks/webpack.js?v=1699435563957:371:21
+__webpack_require__@http://localhost:3000/_next/static/chunks/webpack.js?v=1699435563957:37:33
+fn@http://localhost:3000/_next/static/chunks/webpack.js?v=1699435563957:371:21
+fn@http://localhost:3000/_next/static/chunks/webpack.js?v=1699435563957:371:21
+(app-pages-browser)/./node_modules/next/dist/compiled/scheduler/cjs/scheduler.development.js@http://localhost:3000/_next/static/chunks/main-app.js?v=1699435563957:1686:1
+fn@http://localhost:3000/_next/static/chunks/webpack.js?v=1699435563957:371:21
+(app-pages-browser)/./node_modules/next/dist/compiled/scheduler/cjs/scheduler.development.js@http://localhost:3000/_next/static/chunks/main-app.js?v=1699435563957:1686:1
+fn@http://localhost:3000/_next/static/chunks/webpack.js?v=1699435563957:371:21
+fn@http://localhost:3000/_next/static/chunks/webpack.js?v=1699435563957:371:21
+fn@http://localhost:3000/_next/static/chunks/webpack.js?v=1699435563957:371:21
+(app-pages-browser)/./node_modules/next/dist/compiled/scheduler/cjs/scheduler.development.js@http://localhost:3000/_next/static/chunks/main-app.js?v=1699435563957:1686:1
+fn@http://localhost:3000/_next/static/chunks/webpack.js?v=1699435563957:371:21
+__webpack_require__@http://localhost:3000/_next/static/chunks/webpack.js?v=1699435563957:37:33
+fn@http://localhost:3000/_next/static/chunks/webpack.js?v=1699435563957:371:21
+main
+div
+body
+html
+(app-pages-browser)/./node_modules/next/dist/compiled/scheduler/cjs/scheduler.development.js@http://localhost:3000/_next/static/chunks/main-app.js?v=1699435563957:1686:1
+fn@http://localhost:3000/_next/static/chunks/webpack.js?v=1699435563957:371:21
+(app-pages-browser)/./node_modules/next/dist/compiled/scheduler/cjs/scheduler.development.js@http://localhost:3000/_next/static/chunks/main-app.js?v=1699435563957:1686:1
+fn@http://localhost:3000/_next/static/chunks/webpack.js?v=1699435563957:371:21
+fn@http://localhost:3000/_next/static/chunks/webpack.js?v=1699435563957:371:21
+(app-pages-browser)/./node_modules/next/dist/compiled/scheduler/cjs/scheduler.development.js@http://localhost:3000/_next/static/chunks/main-app.js?v=1699435563957:1686:1
+fn@http://localhost:3000/_next/static/chunks/webpack.js?v=1699435563957:371:21
+fn@http://localhost:3000/_next/static/chunks/webpack.js?v=1699435563957:371:21
+(app-pages-browser)/./node_modules/next/dist/compiled/scheduler/cjs/scheduler.development.js@http://localhost:3000/_next/static/chunks/main-app.js?v=1699435563957:1686:1
+fn@http://localhost:3000/_next/static/chunks/webpack.js?v=1699435563957:371:21
+fn@http://localhost:3000/_next/static/chunks/webpack.js?v=1699435563957:371:21
+fn@http://localhost:3000/_next/static/chunks/webpack.js?v=1699435563957:371:21
+RSCComponent
+fn@http://localhost:3000/_next/static/chunks/webpack.js?v=1699435563957:371:21
+
+И
+
+Пустая строка не может быть аргументом метода getElementById().

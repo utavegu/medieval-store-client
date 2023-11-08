@@ -25,19 +25,17 @@ export default class AuthService {
     });
   }
 
-  // Тут надо уточнить тип, может воид, может не воид, не помню уже
-  static async logout(): Promise<any> {
+  static async logout() {
     return await $api.request({
       method: 'get',
       url: '/auth/logout',
     });
   }
 
-  // TODO: ручка для проверки прав доступа - удалить потом
-  static async test(): Promise<any> {
+  static async checkAuth(): Promise<void> {
     return await $api.request({
       method: 'get',
-      url: '/auth/test',
+      url: '/auth/checkauth',
     });
   }
 }
