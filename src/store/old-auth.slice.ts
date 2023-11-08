@@ -103,15 +103,6 @@ export default class OldAuthSlice {
     }
   }
   */
-
-  // TODO: для проверки прав доступа, потом удалить
-  async test() {
-    try {
-      await AuthService.test();
-    } catch (error: any) {
-      console.error(error.response?.data?.message);
-    }
-  }
 }
 
 // console.error((error as AxiosError).message)

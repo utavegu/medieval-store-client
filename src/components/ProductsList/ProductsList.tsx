@@ -10,14 +10,18 @@ const ProductsList = () => {
     return <div>Ошибка загрузки товаров! Попробуйте позже</div>;
   }
 
-  // TODO: обработать вариант, что товаров по такой выборке просто нет - "такие товары не найдены" (если пустой массив)
   return (
     <>
-      {productsSlice.products?.map((product, i) => (
-        <div key={i}>
-          {product.productName} {product.price}
-        </div>
-      ))}
+      {productsSlice.products?.length ? (
+        productsSlice.products?.map((product, i) => (
+          <div key={i}>
+            {product.productName} {product.price}
+          </div>
+        ))
+      ) : (
+        // TODO: Хотя вообще лучше убрать эту оповещалку, но для отладки пока оставь
+        <div>Товаров по заданным условиям не найдено!</div>
+      )}
     </>
   );
 };
