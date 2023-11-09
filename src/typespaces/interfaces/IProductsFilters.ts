@@ -4,4 +4,5 @@ export interface IProductsFilters {
   maxPrice: string | null | number;
   productName: string;
   materials: { [key: string]: boolean };
+  page: string | number;
 }

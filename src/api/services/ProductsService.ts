@@ -2,9 +2,9 @@ import $api from '..';
 import { IProduct } from '@/models/IProduct';
 
 export default class ProductsService {
-  // TODO: Пока эни, так как и на бэке ещё с параметрами не всё решил и логику не закончил
-  // TODO: А ещё тут паттерн адаптер напрашивается. И почитай реализацию аксиосовского.
-  static async fetchProducts(params?: any): Promise<IProduct[]> {
+  // TODO: А какие именно URLSearchParams уточнить можно?
+  // TODO: Тут паттерн адаптер напрашивается. И почитай реализацию аксиосовского.
+  static async fetchProducts(params?: URLSearchParams): Promise<{ products: IProduct[]; pages: number }> {
     const productWithWrapper = await $api.request({
       method: 'get',
       url: `/products`,

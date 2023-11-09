@@ -4,7 +4,7 @@ import { IProduct } from '../models/IProduct';
 
 class ProductsSlice {
   product = null as unknown as IProduct;
-  products = [] as IProduct[];
+  products = {} as { products: IProduct[]; pages: number };
   isLoading = false;
   error = null as Error | null;
 
@@ -24,12 +24,12 @@ class ProductsSlice {
     this.product = product;
   }
 
-  setProducts(products: IProduct[]) {
+  setProducts(products: { products: IProduct[]; pages: number }) {
     this.products = products;
   }
 
   // TODO: пока эни
-  async fetchProducts(filters: any) {
+  async fetchProducts(filters: URLSearchParams) {
     try {
       this.setLoading(true);
       this.setError(null);
