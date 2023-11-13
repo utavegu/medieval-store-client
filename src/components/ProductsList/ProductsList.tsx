@@ -12,16 +12,12 @@ const ProductsList = () => {
 
   return (
     <>
-      {productsSlice.products?.length ? (
-        productsSlice.products?.map((product, i) => (
+      {!!productsSlice?.products?.products?.length &&
+        productsSlice.products.products.map((product, i) => (
           <div key={i}>
             {product.productName} {product.price}
           </div>
-        ))
-      ) : (
-        // TODO: Хотя вообще лучше убрать эту оповещалку, но для отладки пока оставь
-        <div>Товаров по заданным условиям не найдено!</div>
-      )}
+        ))}
     </>
   );
 };
